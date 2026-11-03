@@ -1,0 +1,5 @@
+# Lead tools: Maps Leads Bot (requests) + B2B Lead Intelligence (aiohttp, bs4, lxml)
+requests>=2.31
+aiohttp>=3.9
+beautifulsoup4>=4.12
+lxml>=5.0

@@ -1,0 +1,6 @@
+# Everything (all apps). Install only a subset with the per-folder files.
+-r seo/requirements.txt
+-r leads/requirements.txt
+-r security/requirements.txt
+-r ai-apps/requirements.txt
+-r utilities/requirements.txt

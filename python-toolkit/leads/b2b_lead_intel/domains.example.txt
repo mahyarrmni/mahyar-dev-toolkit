@@ -1,0 +1,3 @@
+# one domain / URL per line (CSV also works)
+example.com
+https://www.example.org/about

@@ -1,0 +1,28 @@
+[project]
+name = "mahyar-python-toolkit"
+version = "1.1.0"
+description = "SEO, lead-generation, security-audit, AI and utility tools by Mahyar Momeni."
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.10"
+authors = [{ name = "Mahyar Momeni", email = "mahyarmni@gmail.com" }]
+
+[tool.ruff]
+line-length = 140
+target-version = "py310"
+# Newly imported tools (seo_audit_bot, keyword_miner, leads/*, filesage) are not linted yet: see docs/ROADMAP.md
+extend-exclude = ["docs", "seo/seo_audit_bot", "seo/keyword_miner", "leads", "utilities/filesage"]
+
+[tool.ruff.lint]
+# E/F = pycodestyle + pyflakes, I = import order, B = bugbear
+select = ["E", "F", "I", "B"]
+ignore = [
+  "E501",  # long Persian UI strings are intentional
+  "E722",  # legacy bare excepts: tracked in docs/ROADMAP.md
+  "E701",  # original one-line `if x: y` style, kept to limit diff noise
+  "B008",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["seo"]
+testpaths = ["tests"]
