@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SupportFlow AI</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header class="top">
+  <h1>SupportFlow <span>AI</span></h1>
+  <form id="auth"><input id="key" type="password" placeholder="کلید API" autocomplete="off"><button>ورود</button></form>
+</header>
+<main>
+  <section id="stats" class="grid"></section>
+  <nav id="tabs">
+    <button data-tab="queue" class="on">صف ارجاع</button>
+    <button data-tab="all">همه تیکت‌ها</button>
+    <button data-tab="kb">پایگاه دانش</button>
+    <button data-tab="test">تیکت آزمایشی</button>
+  </nav>
+  <section id="panel"></section>
+</main>
+<div id="toast" hidden></div>
+<script src="/static/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,120 @@
+{
+  "name": "SupportFlow - Escalation SLA Reminder",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 15
+            }
+          ]
+        }
+      },
+      "id": "s1",
+      "name": "Every 15 min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "url": "http://api:8000/api/tickets?status=escalated&limit=200",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "X-API-Key",
+              "value": "={{ $env.SUPPORTFLOW_API_KEY }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "s2",
+      "name": "Get Escalated",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const now = Date.now();\nreturn $input.all()\n  .filter(i => ['urgent', 'high'].includes(i.json.priority) && now - new Date(i.json.created_at).getTime() > 3600000)\n  .map(i => ({ json: { id: i.json.id, subject: i.json.subject, priority: i.json.priority } }));"
+      },
+      "id": "s3",
+      "name": "Overdue (>1h, high/urgent)",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        440,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.ESCALATION_WEBHOOK_URL }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({text: `⏰ SLA: ticket #${$json.id} [${$json.priority}] unanswered > 1h: ${$json.subject}`}) }}",
+        "options": {}
+      },
+      "id": "s4",
+      "name": "Notify Team",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        660,
+        0
+      ],
+      "onError": "continueRegularOutput"
+    }
+  ],
+  "connections": {
+    "Every 15 min": {
+      "main": [
+        [
+          {
+            "node": "Get Escalated",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Escalated": {
+      "main": [
+        [
+          {
+            "node": "Overdue (>1h, high/urgent)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Overdue (>1h, high/urgent)": {
+      "main": [
+        [
+          {
+            "node": "Notify Team",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "tags": []
+}
