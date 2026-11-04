@@ -1,0 +1,19 @@
+{
+  "name": "FlowPilot AI",
+  "nodes": [
+    {"parameters": {"httpMethod": "POST", "path": "flowpilot", "responseMode": "onReceived"},
+     "name": "FlowPilot Webhook", "type": "n8n-nodes-base.webhook", "typeVersion": 1, "position": [200, 300], "webhookId": "flowpilot"},
+    {"parameters": {"conditions": {"string": [{"value1": "={{$json.body.priority}}", "operation": "regex", "value2": "^(high|critical)$"}]}},
+     "name": "Urgent?", "type": "n8n-nodes-base.if", "typeVersion": 1, "position": [420, 300]},
+    {"parameters": {"values": {"string": [{"name": "route", "value": "ESCALATE"}, {"name": "action", "value": "={{$json.body.action}}"}]}},
+     "name": "Escalate", "type": "n8n-nodes-base.set", "typeVersion": 1, "position": [650, 200]},
+    {"parameters": {"values": {"string": [{"name": "route", "value": "QUEUE"}, {"name": "action", "value": "={{$json.body.action}}"}]}},
+     "name": "Queue", "type": "n8n-nodes-base.set", "typeVersion": 1, "position": [650, 400]}
+  ],
+  "connections": {
+    "FlowPilot Webhook": {"main": [[{"node": "Urgent?", "type": "main", "index": 0}]]},
+    "Urgent?": {"main": [[{"node": "Escalate", "type": "main", "index": 0}], [{"node": "Queue", "type": "main", "index": 0}]]}
+  },
+  "active": false,
+  "settings": {}
+}
