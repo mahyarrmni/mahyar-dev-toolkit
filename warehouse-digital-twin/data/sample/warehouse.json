@@ -1,0 +1,13 @@
+{
+ "aisles": 6,
+ "bays": 20,
+ "levels": 3,
+ "zones": {
+  "4": "hazmat",
+  "5": "cold"
+ },
+ "shelf_aisles": [
+  0,
+  1
+ ]
+}
